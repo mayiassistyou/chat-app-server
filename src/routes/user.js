@@ -6,7 +6,7 @@ const jwt = require("jsonwebtoken");
 
 router.get("/me", auth, async (req, res) => {
   try {
-    const token = req.headers.token;
+    const token = req.headers.authorization.split("Bearer ").join("");
     var decoded = jwt.decode(token, { complete: true });
     const userId = decoded.payload._id;
 
