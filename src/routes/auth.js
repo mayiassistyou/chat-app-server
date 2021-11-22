@@ -10,11 +10,13 @@ const router = express.Router();
 router.post("/register", async (req, res) => {
   //validate
   const { error } = registerValidation(req.body);
-  if (error) return res.status(400).send(error.details[0].message);
+  if (error)
+    return res.status(400).json({ errorMsg: error.details[0].message });
 
   //check user is already in db
   const emailExist = await User.findOne({ email: req.body.email });
-  if (emailExist) return res.status(400).send("Email already exist");
+  if (emailExist)
+    return res.status(400).json({ errorMsg: "Email already exist" });
 
   //hash the password
   const salt = await bcrypt.genSalt(10);
@@ -31,22 +33,27 @@ router.post("/register", async (req, res) => {
     const savedUser = await user.save();
     res.status(200).json({ user: user._id });
   } catch (error) {
-    res.status(400).send(error);
+    res.status(400).json({ error });
   }
 });
 
 router.post("/login", async (req, res) => {
   //validate
-  const { error } = loginValidation(req.body);
-  if (error) return res.status(400).send(error.details[0].message);
+  // const { error } = loginValidation(req.body);
+  // if (error)
+  //   return res
+  //     .status(400)
+  //     .json({ error: { message: error.details[0].message } });
 
   //check user is already in db
   const user = await User.findOne({ email: req.body.email });
-  if (!user) return res.status(400).send("Email or password is wrong!!!");
+  if (!user)
+    return res.status(401).json({ errorMsg: "Email or password is wrong!!!" });
 
   //check password
   const validPass = await bcrypt.compare(req.body.password, user.password);
-  if (!validPass) return res.status(400).send("Email or password is wrong!!!");
+  if (!validPass)
+    return res.status(401).json({ errorMsg: "Email or password is wrong!!!" });
 
   //create and assign a token
   const token = jwt.sign({ _id: user._id }, process.env.TOKEN_SECRET);
