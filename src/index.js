@@ -6,6 +6,8 @@ const cors = require("cors");
 
 const AuthRoute = require("./routes/auth");
 const UserRoute = require("./routes/user");
+const ConversationRoute = require("./routes/conversation");
+const MessageRoute = require("./routes/message");
 
 mongoose.connect(
   process.env.DB_CONNECTION,
@@ -23,6 +25,8 @@ const port = process.env.PORT || 3333;
 
 app.use("/api/auth", AuthRoute);
 app.use("/api/user", UserRoute);
+app.use("/api/conversation", ConversationRoute);
+app.use("/api/message", MessageRoute);
 
 app.get("/", (req, res) => {
   res.send("halo");

@@ -20,6 +20,9 @@ const userSchema = new Schema({
     min: 6,
     max: 1024,
   },
+  avatar: {
+    type: String,
+  },
   date: {
     type: Date,
     default: Date.now(),
