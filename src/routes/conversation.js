@@ -20,7 +20,7 @@ router.get("/:userId", async (req, res) => {
   try {
     const conversation = await Conversation.find({
       members: { $in: [req.params.userId] },
-    });
+    }).sort({ updateTime: -1 });
     res.status(200).json(conversation);
   } catch (error) {
     res.status(500).json(error.response.message);
